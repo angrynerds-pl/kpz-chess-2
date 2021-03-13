@@ -1,1 +1,5 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Feature Request
+    about: Request a new feature
+    url: https://github.com/angrynerds-pl/kpz-chess-2/issues/new?template=feature.md&projects=angrynerds-pl%2Fkpz-chess-2%2F1&labels=%3Azap%3A%20new
