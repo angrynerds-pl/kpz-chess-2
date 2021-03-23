@@ -1,5 +1,5 @@
 # 1
-name: Simple Workflow Example
+name: Simple Workflow
 # 2
 on: [push]
 
