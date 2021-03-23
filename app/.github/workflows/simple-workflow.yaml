@@ -1,5 +1,5 @@
 # 1
-name: Simple Workflow
+name: Simple Workflow1
 # 2
 on: [push]
 
