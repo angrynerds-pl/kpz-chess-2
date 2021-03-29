@@ -1,13 +1,12 @@
-package com.example.kpz_chess_2.activities.menu
+package com.example.kpz_chess_2.activities.navigationSettings
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import com.example.kpz_chess_2.R
 
-class MenuActivity : AppCompatActivity() {
+class navigationSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_menu)
+        setContentView(R.layout.activity_navigation_settings)
     }
 }
