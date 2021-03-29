@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.kpz_chess_2" >
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kpzchess2" >
-        <activity android:name=".activities.navigationSettings.navigationSettingsActivity" >
-        </activity>
+
         <activity
             android:name=".activities.navigationSettings.NavigationSettingsActivity"
             android:label="@string/title_activity_navigation_settings"
-            android:theme="@style/Theme.Kpzchess2.NoActionBar" />
+            android:theme="@style/Theme.Kpzchess2.NoActionBar"
+            tools:ignore="DuplicateActivity" />
         <activity android:name=".activities.userSettings.UserSettingsActivity" />
         <activity android:name=".activities.menu.MenuActivity" />
         <activity android:name=".activities.game.GameActivity" />
