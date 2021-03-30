@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_settings"
-            android:title="Nav settings" />
+        <item android:id="@+id/nav_save_btn"
+            android:title="@string/save" />
+        <item android:id="@+id/nav_menu_btn"
+            android:title="@string/menu" />
+        <item android:id="@+id/nav_exit_game_btn"
+            android:title="@string/exit_game" />
 
     </group>
 </menu>

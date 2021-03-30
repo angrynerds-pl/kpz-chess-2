@@ -31,4 +31,9 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="save">SAVE</string>
+    <string name="menu">MENU</string>
+    <string name="title_activity_navigation_game">NavigationGame</string>
+    <string name="btn">BTN</string>
+    <string name="exit_game">exit game</string>
 </resources>
