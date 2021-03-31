@@ -33,12 +33,13 @@ class GameActivity : AppCompatActivity(){
         val navController = navHostFragment.navController
         findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navigationView = findViewById<NavigationView>(R.id.nav_view);
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
         /*val toggle = ActionBarDrawerToggle(
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()*/
         navigationView.setNavigationItemSelectedListener {
+            Log.d("LOG", "logggg")
             when(it.itemId){
                 R.id.nav_save_btn -> {
                     Log.d("SAVE2", "sav Work")
@@ -49,7 +50,7 @@ class GameActivity : AppCompatActivity(){
                     startActivity(intent)
                 }
                 R.id.nav_exit_game_btn -> {
-                    finish();
+                    finish()
                     exitProcess(0)
                 }
             }
