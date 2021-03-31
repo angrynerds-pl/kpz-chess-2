@@ -1,3 +1,2 @@
-include ':karballo'
 include ':app'
 rootProject.name = "kpz-chess-2"
