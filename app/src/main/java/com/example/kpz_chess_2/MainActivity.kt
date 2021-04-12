@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.navigation.ui.AppBarConfiguration
 import com.example.kpz_chess_2.activities.game.GameActivity
 import com.example.kpz_chess_2.activities.settings.SettingsActivity
 import com.example.kpz_chess_2.activities.userSettings.UserSettingsActivity

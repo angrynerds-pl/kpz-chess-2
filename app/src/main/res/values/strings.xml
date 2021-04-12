@@ -36,4 +36,8 @@
     <string name="title_activity_navigation_game">NavigationGame</string>
     <string name="btn">BTN</string>
     <string name="exit_game">exit game</string>
+    <string name="usersettingsactivity">UserSettingsActivity</string>
+    <string name="easy">EASY</string>
+    <string name="medium">MEDIUM</string>
+    <string name="hard">HARD</string>
 </resources>

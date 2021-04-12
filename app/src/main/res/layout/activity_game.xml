@@ -8,7 +8,10 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.game.GameActivity"
     tools:openDrawer="start">
-
+    <!--<androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />-->
     <androidx.fragment.app.FragmentContainerView
     android:name="androidx.navigation.fragment.NavHostFragment"
     android:id="@+id/nav_host_fragment"
@@ -16,7 +19,12 @@
     android:layout_height="match_parent"
     app:defaultNavHost="true">
     </androidx.fragment.app.FragmentContainerView>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        layout="@layout/app_bar"/>
+</RelativeLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="400dp"
@@ -25,12 +33,12 @@
         android:fitsSystemWindows="true"
         app:menu="@menu/settings_menu">
 
-        <Button
+        <!--<Button
             android:id="@+id/btn_save_game"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:text="@string/btn" />
+            android:text="@string/btn" />-->
     </com.google.android.material.navigation.NavigationView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
