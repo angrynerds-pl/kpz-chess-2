@@ -7,8 +7,8 @@ import com.netsensia.rivalchess.enums.SearchState
 class ChessWrapper {
     lateinit var search: Search
 
-    enum class Options(val value: Int){
-        TEST(0),
+    enum class Options{
+        OWN_BOOK, HASH, CLEAR
         ;
         class OptionNotFoundException : Exception() {}
     }
@@ -17,9 +17,12 @@ class ChessWrapper {
     fun newGame(){}
     fun position(){}
     fun go(){}
-    fun setOption(option: Options, value: String) {
-        when (option){
 
+    fun setOption(option: Options, value: Any? = null) {
+        when (option){
+            Options.OWN_BOOK -> search.useOpeningBook = value as Boolean
+            Options.HASH -> search.setHashSizeMB(value as Int)
+            Options.CLEAR -> search.clearHash()
             else -> throw Options.OptionNotFoundException()
         }
     }
