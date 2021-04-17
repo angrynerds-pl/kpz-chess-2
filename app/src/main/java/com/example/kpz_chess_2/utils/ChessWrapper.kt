@@ -7,17 +7,29 @@ import com.netsensia.rivalchess.enums.SearchState
 class ChessWrapper {
     lateinit var search: Search
 
+    enum class Options(val value: Int){
+        TEST(0),
+        ;
+        class OptionNotFoundException : Exception() {}
+    }
+
     fun isReady(){}
     fun newGame(){}
     fun position(){}
     fun go(){}
-    fun setOption(){}
+    fun setOption(option: Options, value: String) {
+        when (option){
+
+            else -> throw Options.OptionNotFoundException()
+        }
+    }
+
     fun stop(){
         search.stopSearch()
         waitForSearchToComplete()
     }
 
-    fun waitForSearchToComplete(){
+    private fun waitForSearchToComplete(){
         var state: SearchState
         search.stopSearch()
         do{
