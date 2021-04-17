@@ -14,8 +14,14 @@ class ChessWrapper {
     }
 
     fun isReady(){}
-    fun newGame(){}
+
+    fun newGame(){
+        waitForSearchToComplete()
+        search.newGame()
+    }
+
     fun position(){}
+
     fun go(){}
 
     fun setOption(option: Options, value: Any? = null) {
