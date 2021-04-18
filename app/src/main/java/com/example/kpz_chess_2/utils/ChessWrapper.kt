@@ -1,6 +1,5 @@
 package com.example.kpz_chess_2.utils
 
-import android.util.Log
 import com.example.kpz_chess_2.utils.ChessWrapper.Option.SearchOption.*
 import com.netsensia.rivalchess.config.MAX_SEARCH_DEPTH
 import com.netsensia.rivalchess.config.MAX_SEARCH_MILLIS
@@ -12,6 +11,8 @@ import com.netsensia.rivalchess.model.Colour
 @ExperimentalUnsignedTypes
 class ChessWrapper {
     lateinit var search: Search
+    var board = Board()
+
     var searchOptions: MutableMap<Option.SearchOption, Any?> = mutableMapOf(
             WHITE_TIME to WHITE_TIME.default,
             BLACK_TIME to BLACK_TIME.default,
@@ -38,12 +39,18 @@ class ChessWrapper {
     fun newGame(){
         waitForSearchToComplete()
         search.newGame()
-
     }
 
     fun position(){}
 
-    fun go(){}
+    fun move(){
+
+    }
+
+    fun go(){
+        search.go()
+
+    }
 
     fun setOption(option: Option, value: Any? = null) = when (option){
         Option.OWN_BOOK -> search.useOpeningBook = value as Boolean
@@ -87,5 +94,31 @@ class ChessWrapper {
         do{
             state = search.engineState
         } while (state != SearchState.READY && state != SearchState.COMPLETE)
+    }
+
+    enum class Color(val mask: Char){
+        WHITE('W'), BLACK('B')
+    }
+
+    enum class Type(val mask: Char){
+        PAWN('P'), ROOK('R'), BISHOP('B'), KNIGHT('N'), QUEEN('Q'),
+        KING('K')
+    }
+
+    class Piece(var position: Field, var color: Color, var type: Type) {}
+
+    class Field(var row: Char, var column: Int, var board: Board, var piece: Piece?) {}
+
+    class Board{
+        var fields: MutableMap<Char, MutableList<Field>> = mutableMapOf()
+
+        init{
+            for(row in listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')){
+                fields[row] = mutableListOf()
+                for(i in 1..8){
+                    fields[row]?.add(Field(row, i, this, null))
+                }
+            }
+        }
     }
 }
