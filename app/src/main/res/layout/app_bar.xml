@@ -7,3 +7,4 @@
     android:id="@+id/app_Bar">
 
 </androidx.appcompat.widget.Toolbar>
+    <!-- android:background="@null"-->

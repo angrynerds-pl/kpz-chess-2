@@ -39,6 +39,8 @@ class GameActivity : AppCompatActivity(){
         val actionBar = supportActionBar
         actionBar!!.setDisplayHomeAsUpEnabled(true)
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_white)
+        actionBar.setDisplayShowTitleEnabled(false)
+        toolbar.title = ""
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
             Log.d("NAV ITEM", "nav items")
