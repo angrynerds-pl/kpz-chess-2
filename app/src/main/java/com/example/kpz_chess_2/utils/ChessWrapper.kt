@@ -26,17 +26,6 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
             IS_INFINITE to IS_INFINITE.default
     )
 
-    enum class Option{
-        OWN_BOOK, HASH, CLEAR
-        ;
-        class OptionNotFoundException : Exception() {}
-        enum class SearchOption(val default: Any){
-            WHITE_TIME(1), BLACK_TIME(1), WHITE_INC(1), BLACK_INC(1),
-            MOVES_TO_GO(1), MAX_DEPTH(1), MAX_NODES(1), MOVE_TIME(1),
-            IS_INFINITE(false)
-        }
-    }
-
     fun newGame(){
         waitForSearchToComplete()
         search.newGame()
@@ -101,6 +90,18 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
         } while (state != SearchState.READY && state != SearchState.COMPLETE)
     }
 
+    //enums
+    enum class Option{
+        OWN_BOOK, HASH, CLEAR
+        ;
+        class OptionNotFoundException : Exception() {}
+        enum class SearchOption(val default: Any){
+            WHITE_TIME(1), BLACK_TIME(1), WHITE_INC(1), BLACK_INC(1),
+            MOVES_TO_GO(1), MAX_DEPTH(1), MAX_NODES(1), MOVE_TIME(1),
+            IS_INFINITE(false)
+        }
+    }
+
     enum class Color(val mask: Char){
         WHITE('W'), BLACK('B')
     }
@@ -110,6 +111,7 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
         KING('K')
     }
 
+    //data classes
     class Piece(var position: Field, var color: Color, var type: Type) {}
 
     class Field(var row: Char, var column: Int, var board: Board, var piece: Piece?) {}
@@ -125,5 +127,7 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
                 }
             }
         }
+
+        operator fun get(row: Char, column: Int): Field { return fields[row]!![column] }
     }
 }
