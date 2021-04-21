@@ -10,9 +10,9 @@ import kotlin.jvm.internal.FunctionReference
 
 
 @ExperimentalUnsignedTypes
-class ChessWrapper(updateCallback: ((board: Board)->Unit)? = null) {
+class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
     lateinit var search: Search
-    var board = Board(updateCallback)
+    var board = Board()
 
     var searchOptions: MutableMap<Option.SearchOption, Any?> = mutableMapOf(
             WHITE_TIME to WHITE_TIME.default,
@@ -44,9 +44,13 @@ class ChessWrapper(updateCallback: ((board: Board)->Unit)? = null) {
 
     fun position(){}
 
-    fun move(){
+    fun move(piece: Piece, to: Field){
 
+        piece.position = to
+        update()
     }
+
+    fun update(){ updateCallback?.invoke(board) }
 
     fun go(){
         search.go()
@@ -110,7 +114,7 @@ class ChessWrapper(updateCallback: ((board: Board)->Unit)? = null) {
 
     class Field(var row: Char, var column: Int, var board: Board, var piece: Piece?) {}
 
-    class Board(var updateCallback: ((board: Board)->Unit)? = null){
+    class Board(){
         var fields: MutableMap<Char, MutableList<Field>> = mutableMapOf()
 
         init{
@@ -121,11 +125,5 @@ class ChessWrapper(updateCallback: ((board: Board)->Unit)? = null) {
                 }
             }
         }
-
-        fun move(piece: Piece, to: Field){
-            update()
-        }
-
-        fun update(){ updateCallback?.invoke(this) }
     }
 }
