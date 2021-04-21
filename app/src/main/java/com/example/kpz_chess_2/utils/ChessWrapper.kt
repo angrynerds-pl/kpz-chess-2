@@ -10,9 +10,9 @@ import kotlin.jvm.internal.FunctionReference
 
 
 @ExperimentalUnsignedTypes
-class ChessWrapper {
+class ChessWrapper(updateCallback: ((board: Board)->Unit)? = null) {
     lateinit var search: Search
-    var board = Board()
+    var board = Board(updateCallback)
 
     var searchOptions: MutableMap<Option.SearchOption, Any?> = mutableMapOf(
             WHITE_TIME to WHITE_TIME.default,
