@@ -6,6 +6,7 @@ import com.netsensia.rivalchess.config.MAX_SEARCH_MILLIS
 import com.netsensia.rivalchess.engine.search.Search
 import com.netsensia.rivalchess.enums.SearchState
 import com.netsensia.rivalchess.model.Colour
+import kotlin.jvm.internal.FunctionReference
 
 
 @ExperimentalUnsignedTypes
@@ -109,7 +110,7 @@ class ChessWrapper {
 
     class Field(var row: Char, var column: Int, var board: Board, var piece: Piece?) {}
 
-    class Board{
+    class Board(var updateCallback: ((board: Board)->Unit)? = null){
         var fields: MutableMap<Char, MutableList<Field>> = mutableMapOf()
 
         init{
@@ -120,5 +121,11 @@ class ChessWrapper {
                 }
             }
         }
+
+        fun move(piece: Piece, to: Field){
+            update()
+        }
+
+        fun update(){ updateCallback?.invoke(this) }
     }
 }
