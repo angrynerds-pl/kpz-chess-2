@@ -70,7 +70,7 @@ class ChessWrapperTest {
 
     @Test
     fun testIsLegal(){
-        chess.newGame()
+        chess.newGame(ChessWrapper.Color.WHITE)
         //Pawn
         assert(chess.isLegal(chess.board['A', 2].piece!!, chess.board['A', 3]))
         assert(chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 6]))
@@ -82,6 +82,11 @@ class ChessWrapperTest {
         assert(!chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 4]))
         assert(!chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 8]))
         assert(!chess.isLegal(chess.board['A', 7].piece!!, chess.board['B', 7]))
-
+        chess.move(chess.board['A', 2].piece!!, chess.board['A', 4])
+        chess.move(chess.board['B', 7].piece!!, chess.board['B', 5])
+        assert(chess.isLegal(chess.board['A', 4].piece!!, chess.board['B', 5]))
+        assert(!chess.isLegal(chess.board['A', 4].piece!!, chess.board['B', 6]))
+        assert(chess.isLegal(chess.board['B', 5].piece!!, chess.board['A', 4]))
+        assert(!chess.isLegal(chess.board['B', 5].piece!!, chess.board['C', 4]))
     }
 }

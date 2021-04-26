@@ -44,14 +44,16 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
                 when (piece.color){
                     Color.WHITE -> {
                         if((piece.position!!.row == to.row - 1 || (piece.position!!.row == to.row - 2 && piece.position!!.row == 2)) &&
-                                ((to.piece == null) || (abs(piece.position!!.column - to.column) == 1 && to.piece != null)))
+                                (( piece.position!!.column == to.column && to.piece == null) ||
+                                        (abs(piece.position!!.column - to.column) == 1 && to.piece != null)))
                                     return true
 
                     }
 
                     Color.BLACK -> {
                         if((piece.position!!.row == to.row + 1 || (piece.position!!.row == to.row + 2 && piece.position!!.row == 7)) &&
-                                ((to.piece == null) || (abs(piece.position!!.column - to.column) == 1 && to.piece != null)))
+                                (( piece.position!!.column == to.column && to.piece == null) ||
+                                        (abs(piece.position!!.column - to.column) == 1 && to.piece != null)))
                             return true
                     }
                 }
