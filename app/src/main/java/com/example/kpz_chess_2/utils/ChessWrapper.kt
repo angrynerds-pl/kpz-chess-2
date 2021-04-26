@@ -30,15 +30,24 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
 
     fun newGame(){
         waitForSearchToComplete()
-        search.newGame()
+        search = Search()
         update()
     }
 
     fun position(){}
 
+    fun isLegal(piece: Piece, to: Field): Boolean {
+        return true
+    }
+
     fun move(piece: Piece, to: Field){
         val simpleAlgebraic = "${piece.position?.column}${piece.position!!.row}${to.column}${to.row}"
-        search.makeMove(getEngineMoveFromSimpleAlgebraic(simpleAlgebraic).compact)
+        try {
+            if(isLegal(piece, to)) search.makeMove(getEngineMoveFromSimpleAlgebraic(simpleAlgebraic).compact)
+            else throw IllegalAccessException("Illegal move for $piece to $to")
+        } catch(e: ArrayIndexOutOfBoundsException){
+            throw IllegalAccessException("It's not your move. Now moves ${board.mover}.")
+        }
         update()
     }
 
@@ -130,12 +139,14 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
     class Board(){
         var fields: MutableMap<Int, MutableMap<Char, Field>> = mutableMapOf()
         var piecesOffBoard: MutableMap<Type, MutableMap<Color, MutableList<Piece>>> = mutableMapOf()
+        var mover: Color = Color.WHITE
 
         init{
             resetBoard()
         }
 
         fun resetBoard(){
+            mover = Color.WHITE
             for(row in 1..8){
                 fields[row] = mutableMapOf()
                 for(i in listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')){
@@ -173,13 +184,13 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
             resetBoard()
             println(fen)
             val lines : List<String> = fen.split(' ')[0].split('/').reversed()
-
+            mover = if(fen.split(' ')[1].first() == 'w') Color.WHITE else Color.BLACK
             lines.forEachIndexed { i, line ->
                 
                 var correct = 0
                 line.toCharArray().forEachIndexed {j, char ->
                     if(char in listOf('1', '2', '3', '4', '5', '6', '7', '8')){
-                        correct += Character.getNumericValue(char)
+                        correct += Character.getNumericValue(char) -1
                     }
                     else when(char){
                         'r' -> {
