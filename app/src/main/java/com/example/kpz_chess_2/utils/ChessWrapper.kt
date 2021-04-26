@@ -10,6 +10,7 @@ import com.netsensia.rivalchess.util.*
 import com.example.kpz_chess_2.utils.ChessWrapper.Type.*
 import com.netsensia.rivalchess.engine.board.getFen
 import com.netsensia.rivalchess.engine.board.makeMove
+import kotlin.math.abs
 
 
 @ExperimentalUnsignedTypes
@@ -37,9 +38,59 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
         update()
     }
 
-    fun position(){}
-
     fun isLegal(piece: Piece, to: Field): Boolean {
+        when (piece.type) {
+            PAWN -> {
+                when (piece.color){
+                    Color.WHITE -> {
+                        if((piece.position!!.row == to.row - 1 || (piece.position!!.row == to.row - 2 && piece.position!!.row == 2)) &&
+                                ((to.piece == null) || (abs(piece.position!!.column - to.column) == 1 && to.piece != null)))
+                                    return true
+
+                    }
+
+                    Color.BLACK -> {
+                        if((piece.position!!.row == to.row + 1 || (piece.position!!.row == to.row + 2 && piece.position!!.row == 7)) &&
+                                ((to.piece == null) || (abs(piece.position!!.column - to.column) == 1 && to.piece != null)))
+                            return true
+                    }
+                }
+            }
+            ROOK -> {
+                if (to.piece?.color != piece.color &&
+                        ((piece.position!!.column == to.column && piece.position!!.row != to.row)
+                                        || (piece.position!!.row == to.row && piece.position!!.column != to.column)) &&
+                        checkCollision(piece, to)) return true
+            }
+            KNIGHT -> {
+                if (to.piece?.color != piece.color &&
+                        (abs(piece.position!!.column - to.column) + abs(piece.position!!.row - to.row) == 3 &&
+                                        (piece.position!!.column - to.column) != 0 && (piece.position!!.row - to.row) != 0)) return true
+            }
+            BISHOP -> {
+                if (to.piece?.color != piece.color &&
+                        (abs(piece.position!!.column - to.column) == abs(piece.position!!.row - to.row) &&
+                                        (piece.position!!.column - to.column) != 0 && (piece.position!!.row - to.row) != 0) &&
+                        checkCollision(piece, to)) return true
+            }
+            QUEEN -> {
+                if (to.piece?.color != piece.color &&
+                        ((piece.position!!.column == to.column && piece.position!!.row != to.row)
+                                        || (piece.position!!.row == to.row && piece.position!!.column != to.column)) &&
+                        (abs(piece.position!!.column - to.column) == abs(piece.position!!.row - to.row) &&
+                                (piece.position!!.column - to.column) != 0 && (piece.position!!.row - to.row) != 0) &&
+                        checkCollision(piece, to)) return true
+            }
+            KING -> {
+                if(to.piece?.color != piece.color && (abs(piece.position!!.column - to.column) == 1 &&
+                                abs(piece.position!!.row - to.row) == 1) || (abs(piece.position!!.column - to.column) == 0 &&
+                                abs(piece.position!!.row - to.row) == 0) ) return true
+            }
+        }
+        return false
+    }
+
+    private fun checkCollision(piece: Piece, to: Field): Boolean {
         return true
     }
 
@@ -199,52 +250,52 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
                     }
                     else when(char){
                         'r' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[ROOK]!![Color.BLACK]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[ROOK]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'R' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[ROOK]!![Color.WHITE]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[ROOK]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'n' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KNIGHT]!![Color.BLACK]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[KNIGHT]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'N' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KNIGHT]!![Color.WHITE]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[KNIGHT]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'b' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[BISHOP]!![Color.BLACK]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[BISHOP]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'B' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[BISHOP]!![Color.WHITE]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[BISHOP]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'q' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[QUEEN]!![Color.BLACK]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[QUEEN]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'Q' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[QUEEN]!![Color.WHITE]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[QUEEN]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'k' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KING]!![Color.BLACK]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[KING]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'K' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KING]!![Color.WHITE]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[KING]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'p' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[PAWN]!![Color.BLACK]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[PAWN]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         }
                         'P' -> {
-                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[PAWN]!![Color.WHITE]!!.removeAt(0)
-                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                            this[(j+correct+65).toChar(), i+1].piece = piecesOffBoard[PAWN]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1].piece!!.position = this[(j+correct+65).toChar(), i+1]
                         }
                     }
                 }

@@ -67,4 +67,21 @@ class ChessWrapperTest {
         chess.move(chess.board['A', 7].piece!!, chess.board['A', 6])
         chess.go()
     }
+
+    @Test
+    fun testIsLegal(){
+        chess.newGame()
+        //Pawn
+        assert(chess.isLegal(chess.board['A', 2].piece!!, chess.board['A', 3]))
+        assert(chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 6]))
+        assert(chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 5]))
+        assert(chess.isLegal(chess.board['A', 2].piece!!, chess.board['A', 4]))
+        assert(!chess.isLegal(chess.board['A', 2].piece!!, chess.board['A', 5]))
+        assert(!chess.isLegal(chess.board['A', 2].piece!!, chess.board['A', 1]))
+        assert(!chess.isLegal(chess.board['A', 2].piece!!, chess.board['B', 2]))
+        assert(!chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 4]))
+        assert(!chess.isLegal(chess.board['A', 7].piece!!, chess.board['A', 8]))
+        assert(!chess.isLegal(chess.board['A', 7].piece!!, chess.board['B', 7]))
+
+    }
 }
