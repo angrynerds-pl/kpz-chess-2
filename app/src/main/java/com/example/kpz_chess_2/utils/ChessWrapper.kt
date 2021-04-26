@@ -6,9 +6,9 @@ import com.netsensia.rivalchess.config.MAX_SEARCH_MILLIS
 import com.netsensia.rivalchess.engine.search.Search
 import com.netsensia.rivalchess.enums.SearchState
 import com.netsensia.rivalchess.model.Colour
+import com.netsensia.rivalchess.util.*
 import com.example.kpz_chess_2.utils.ChessWrapper.Type.*
 import com.netsensia.rivalchess.engine.board.getFen
-import kotlin.jvm.internal.FunctionReference
 
 
 @ExperimentalUnsignedTypes
@@ -37,7 +37,8 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
     fun position(){}
 
     fun move(piece: Piece, to: Field){
-        piece.position = to
+        val simpleAlgebraic = "${piece.position?.column}${piece.position!!.row}${to.column}${to.row}"
+        search.makeMove(getEngineMoveFromSimpleAlgebraic(simpleAlgebraic).compact)
         update()
     }
 
@@ -116,18 +117,18 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
     //data classes
     class Piece(var position: Field?, var color: Color, var type: Type) {
         override fun toString(): String{
-            return "$color $type $position"
+            return "$color $type"
         }
     }
 
-    class Field(var row: Char, var column: Int, var board: Board, var piece: Piece?) {
+    class Field(var row: Int, var column: Char, var board: Board, var piece: Piece?) {
         override fun toString(): String{
-            return "$row$column<${piece?.color} ${piece?.type}>"
+            return "$column$row<${piece?.color} ${piece?.type}>"
         }
     }
 
     class Board(){
-        var fields: MutableMap<Char, MutableList<Field>> = mutableMapOf()
+        var fields: MutableMap<Int, MutableMap<Char, Field>> = mutableMapOf()
         var piecesOffBoard: MutableMap<Type, MutableMap<Color, MutableList<Piece>>> = mutableMapOf()
 
         init{
@@ -135,10 +136,10 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
         }
 
         fun resetBoard(){
-            for(row in listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')){
-                fields[row] = mutableListOf()
-                for(i in 1..8){
-                    fields[row]?.add(Field(row, i, this, null))
+            for(row in 1..8){
+                fields[row] = mutableMapOf()
+                for(i in listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')){
+                    fields[row]?.put(i, Field(row, i, this, null))
                 }
             }
 
@@ -157,8 +158,8 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
             }
         }
 
-        operator fun get(row: Char, column: Int): Field { return fields[row]!![column] }
-        operator fun set(row: Char, column: Int, value: Field) { fields[row]!![column] = value }
+        operator fun get(column: Char, row: Int): Field? { return fields[row]!![column] }
+        operator fun set(column: Char, row: Int, value: Field) { fields[row]!![column] = value }
 
         override fun toString(): String{
             var ret = ""
@@ -170,65 +171,64 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
 
         fun fromFen(fen: String){
             resetBoard()
-
-            val lines : List<String> = fen.split(' ')[0].split('/')
+            println(fen)
+            val lines : List<String> = fen.split(' ')[0].split('/').reversed()
 
             lines.forEachIndexed { i, line ->
-                val row = (i+65).toChar()
+                
                 var correct = 0
                 line.toCharArray().forEachIndexed {j, char ->
-
                     if(char in listOf('1', '2', '3', '4', '5', '6', '7', '8')){
                         correct += Character.getNumericValue(char)
                     }
                     else when(char){
                         'r' -> {
-                            this[row, j+correct].piece = piecesOffBoard[ROOK]!![Color.BLACK]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[ROOK]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'R' -> {
-                            this[row, j+correct].piece = piecesOffBoard[ROOK]!![Color.WHITE]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[ROOK]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'n' -> {
-                            this[row, j+correct].piece = piecesOffBoard[KNIGHT]!![Color.BLACK]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KNIGHT]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'N' -> {
-                            this[row, j+correct].piece = piecesOffBoard[KNIGHT]!![Color.WHITE]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KNIGHT]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'b' -> {
-                            this[row, j+correct].piece = piecesOffBoard[BISHOP]!![Color.BLACK]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[BISHOP]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'B' -> {
-                            this[row, j+correct].piece = piecesOffBoard[BISHOP]!![Color.WHITE]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[BISHOP]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'q' -> {
-                            this[row, j+correct].piece = piecesOffBoard[QUEEN]!![Color.BLACK]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[QUEEN]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'Q' -> {
-                            this[row, j+correct].piece = piecesOffBoard[QUEEN]!![Color.WHITE]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[QUEEN]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'k' -> {
-                            this[row, j+correct].piece = piecesOffBoard[KING]!![Color.BLACK]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KING]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'K' -> {
-                            this[row, j+correct].piece = piecesOffBoard[KING]!![Color.WHITE]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[KING]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         } 
                         'p' -> {
-                            this[row, j+correct].piece = piecesOffBoard[PAWN]!![Color.BLACK]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
-                        } 
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[PAWN]!![Color.BLACK]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
+                        }
                         'P' -> {
-                            this[row, j+correct].piece = piecesOffBoard[PAWN]!![Color.WHITE]!!.removeAt(0)
-                            this[row, j+correct].piece!!.position = this[row, j+correct]
+                            this[(j+correct+65).toChar(), i+1]?.piece = piecesOffBoard[PAWN]!![Color.WHITE]!!.removeAt(0)
+                            this[(j+correct+65).toChar(), i+1]?.piece!!.position = this[(j+correct+65).toChar(), i+1]
                         }
                     }
                 }
