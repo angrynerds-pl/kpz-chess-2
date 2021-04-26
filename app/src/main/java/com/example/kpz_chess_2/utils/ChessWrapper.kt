@@ -9,6 +9,7 @@ import com.netsensia.rivalchess.model.Colour
 import com.netsensia.rivalchess.util.*
 import com.example.kpz_chess_2.utils.ChessWrapper.Type.*
 import com.netsensia.rivalchess.engine.board.getFen
+import com.netsensia.rivalchess.engine.board.makeMove
 
 
 @ExperimentalUnsignedTypes
@@ -28,9 +29,11 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
             IS_INFINITE to IS_INFINITE.default
     )
 
-    fun newGame(){
+    fun newGame(aiColor: Color = Color.BLACK){
         waitForSearchToComplete()
         search = Search()
+        search.engineBoard.mover = if(aiColor == Color.WHITE) Colour.WHITE else Colour.BLACK
+        saveSearchOptions()
         update()
     }
 
@@ -43,7 +46,7 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
     fun move(piece: Piece, to: Field){
         val simpleAlgebraic = "${piece.position?.column}${piece.position!!.row}${to.column}${to.row}"
         try {
-            if(isLegal(piece, to)) search.makeMove(getEngineMoveFromSimpleAlgebraic(simpleAlgebraic).compact)
+            if(isLegal(piece, to)) search.engineBoard.makeMove(getEngineMoveFromSimpleAlgebraic(simpleAlgebraic).compact)
             else throw IllegalAccessException("Illegal move for $piece to $to")
         } catch(e: ArrayIndexOutOfBoundsException){
             throw IllegalAccessException("It's not your move. Now moves ${board.mover}.")
@@ -58,6 +61,8 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
 
     fun go(){
         search.go()
+        search.makeMove(search.currentMove)
+        update()
     }
 
     fun setOption(option: Option, value: Any? = null) = when (option){
@@ -108,8 +113,8 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
         OWN_BOOK, HASH, CLEAR
         ;
         enum class SearchOption(val default: Any){
-            WHITE_TIME(1), BLACK_TIME(1), WHITE_INC(1), BLACK_INC(1),
-            MOVES_TO_GO(1), MAX_DEPTH(1), MAX_NODES(1), MOVE_TIME(1),
+            WHITE_TIME(1000), BLACK_TIME(1000), WHITE_INC(10), BLACK_INC(10),
+            MOVES_TO_GO(0), MAX_DEPTH(5), MAX_NODES(0), MOVE_TIME(5000),
             IS_INFINITE(false)
         }
     }
@@ -169,7 +174,7 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
             }
         }
 
-        operator fun get(column: Char, row: Int): Field? { return fields[row]!![column] }
+        operator fun get(column: Char, row: Int): Field { return fields[row]!![column]!! }
         operator fun set(column: Char, row: Int, value: Field) { fields[row]!![column] = value }
 
         override fun toString(): String{

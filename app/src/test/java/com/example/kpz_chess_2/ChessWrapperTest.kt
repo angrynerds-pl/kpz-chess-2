@@ -46,17 +46,25 @@ class ChessWrapperTest {
     @Test
     fun testMove(){
         chess.newGame()
-        chess.move(chess.board['A', 2]?.piece!!, chess.board['A', 3]!!)
-        assert(chess.board['A', 2]!!.piece == null)
-        assert(chess.board['A', 3]!!.piece!!.type == ChessWrapper.Type.PAWN &&
-                chess.board['A', 3]!!.piece!!.position!!.column == 'A' &&
-                chess.board['A', 3]!!.piece!!.position!!.row == 3)
-        chess.move(chess.board['A', 7]?.piece!!, chess.board['A', 6]!!)
+        chess.move(chess.board['A', 2].piece!!, chess.board['A', 3])
+        assert(chess.board['A', 2].piece == null)
+        assert(chess.board['A', 3].piece!!.type == ChessWrapper.Type.PAWN &&
+                chess.board['A', 3].piece!!.position!!.column == 'A' &&
+                chess.board['A', 3].piece!!.position!!.row == 3)
+        chess.move(chess.board['A', 7].piece!!, chess.board['A', 6])
         try {
-            chess.move(chess.board['A', 6]?.piece!!, chess.board['A', 5]!!)
+            chess.move(chess.board['A', 6].piece!!, chess.board['A', 5])
         } catch (e: Exception) {
             assert(e is IllegalAccessException)
         }
-        chess.move(chess.board['A', 1]?.piece!!, chess.board['B', 2]!!)
+        chess.move(chess.board['A', 1].piece!!, chess.board['B', 3])
+    }
+
+    @Test
+    fun testGo(){
+        chess.newGame(ChessWrapper.Color.WHITE)
+        chess.go()
+        chess.move(chess.board['A', 7].piece!!, chess.board['A', 6])
+        chess.go()
     }
 }
