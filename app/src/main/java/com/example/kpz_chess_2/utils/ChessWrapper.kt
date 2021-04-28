@@ -30,7 +30,7 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
             IS_INFINITE to IS_INFINITE.default
     )
 
-    fun newGame(aiColor: Color = Color.BLACK){
+    fun newGame(aiColor: Color = Color.WHITE){
         waitForSearchToComplete()
         search = Search()
         search.engineBoard.mover = if(aiColor == Color.WHITE) Colour.WHITE else Colour.BLACK
