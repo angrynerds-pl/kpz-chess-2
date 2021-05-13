@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.kpz_chess_2" >
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.ar" />
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -11,11 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kpzchess2" >
-        <activity
-            android:name=".activities.navigationSettings.NavigationSettingsActivity"
-            android:label="@string/title_activity_navigation_settings"
-            android:theme="@style/Theme.Kpzchess2.NoActionBar"
-            tools:ignore="DuplicateActivity" />
         <activity android:name=".activities.userSettings.UserSettingsActivity" />
         <activity android:name=".activities.menu.MenuActivity" />
         <activity android:name=".activities.game.GameActivity" />
@@ -29,6 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data android:name="com.google.ar.core" android:value="required" />
     </application>
 
 </manifest>
