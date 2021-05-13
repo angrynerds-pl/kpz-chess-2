@@ -13,7 +13,10 @@ import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.content_game.*
 
 
-class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ChessDelegate {
+
+    var chessModel = ChessModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -26,6 +29,8 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_menu.setNavigationItemSelectedListener(this)
+
+        findViewById<ChessView>(R.id.chess_view).chessDelegate = this
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -38,6 +43,15 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             finishAffinity()
         }
         return true
+    }
+
+    override fun pieceAt(col: Int, row: Int): ChessPiece? {
+        return chessModel.pieceAt(col, row)
+    }
+
+    override fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
+        chessModel.movePiece(fromCol, fromRow, toCol, toRow)
+        findViewById<ChessView>(R.id.chess_view).invalidate()
     }
 }
 
