@@ -2,9 +2,9 @@
 
 ## How to run the application
 
-Most of the description comes from the [documentation] (https://developers.google.com/ar/develop/java/emulator).
+Most of the description comes from the [documentation](https://developers.google.com/ar/develop/java/emulator).
 
-1. Download and install [Android Studio] (https://developer.android.com/studio) 3.1 or later.
+1. Download and install [Android Studio](https://developer.android.com/studio) 3.1 or later.
 2. In Android Studio, go to **Preferences > Appearance and Behavior > System Settings > Android SDK**.
 3. Select the **SDK Platforms** tab and check **Show Package Details**.
   - Under the appropriate Android version select: **Google APIs Intel x86 Atom System Image** API Level 27 version 4, 28, or 29.
@@ -27,7 +27,7 @@ Most of the description comes from the [documentation] (https://developers.googl
 
 ##### Update Google Play Services for AR
 
-1. Download the latest Google_Play_Services_for_AR_1.23.0_x86_for_emulator.apk from the GitHub [releases] (https://github.com/google-ar/arcore-android-sdk/releases) page.
+1. Download the latest Google_Play_Services_for_AR_1.23.0_x86_for_emulator.apk from the GitHub [releases](https://github.com/google-ar/arcore-android-sdk/releases) page.
 2. Install the downloaded APK into each AVD you'd like to use:
   - start the desired AVD, then drag the downloaded APK onto the running emulator
   - **OR**  install it using ```adb``` while the virtual device is running: ``` adb install -r Google_Play_Services_for_AR_1.23.0_x86_for_emulator.apk ```
@@ -39,7 +39,7 @@ Most of the description comes from the [documentation] (https://developers.googl
 
 ##### Install apk from this repository
 
-1. Go to [Github Actions] (https://github.com/angrynerds-pl/kpz-chess-2/actions).
+1. Go to [Github Actions](https://github.com/angrynerds-pl/kpz-chess-2/actions).
 2. Click on the first workflow from the top.
 3. Download **build-output**.
 4. Extract the zip file.
