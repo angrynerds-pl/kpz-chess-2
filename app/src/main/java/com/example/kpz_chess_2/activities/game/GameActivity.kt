@@ -1,33 +1,36 @@
 package com.example.kpz_chess_2.activities.game
 
-import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kpz_chess_2.MainActivity
 import com.example.kpz_chess_2.R
 import com.google.android.material.navigation.NavigationView
-import com.google.ar.core.*
-import com.google.ar.core.ArCoreApk.Availability.*
-import com.google.ar.core.examples.java.common.helpers.CameraPermissionHelper
-import com.google.ar.core.exceptions.*
+import com.google.ar.core.Anchor
+import com.google.ar.core.Plane
 import com.google.ar.sceneform.AnchorNode
-import com.google.ar.sceneform.rendering.MaterialFactory
+import com.google.ar.sceneform.rendering.ModelRenderable
+import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.ux.ArFragment
+import com.google.ar.sceneform.ux.TransformableNode
 import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.content_game.*
-import java.util.*
 
 
 class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     //private var mSession: Session? = null
+
+    //private var ASSET_3D: String = ""
+
+    //private var model: ModelRenderable? = null
+
+    private lateinit var arFragment: ArFragment
+    private lateinit var selectedObject: Uri
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -47,12 +50,29 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_menu.setNavigationItemSelectedListener(this)
 
-        //maybeEnableArButton()
-        val arFragment: ArFragment = supportFragmentManager.findFragmentById(R.id.fragment) as ArFragment
-        arFragment.setOnTapArPlaneListener{ hitResult, plane, motionEvent ->
-            val anchor = hitResult.createAnchor()
+        arFragment = supportFragmentManager.findFragmentById(R.id.fragment) as ArFragment
 
+        setModelPath("model.sfb")
+
+        arFragment.setOnTapArPlaneListener { hitResult, plane, _ ->
+            if(plane.type != Plane.Type.HORIZONTAL_UPWARD_FACING) {
+                return@setOnTapArPlaneListener
+            }
+            val anchor = hitResult.createAnchor()
+            placeObject(arFragment, anchor, selectedObject)
         }
+
+
+
+        //loadModel()
+
+        //maybeEnableArButton()
+        //val arFragment: ArFragment = supportFragmentManager.findFragmentById(R.id.fragment) as ArFragment
+        //arFragment.setOnTapArPlaneListener{ hitResult, plane, motionEvent ->
+            //placeModel(hitResult.createAnchor())
+            //val anchor = hitResult.createAnchor()
+        //}
+
         /*arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
             Anchor anchor = hitResult.createAnchor();
 
@@ -66,6 +86,72 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
         })*/
     }
+
+    private fun placeObject(fragment: ArFragment, anchor: Anchor, modelUri: Uri) {
+        val modelRenderable = ModelRenderable.builder()
+            .setSource((fragment.requireContext()), modelUri)
+            .build()
+
+        modelRenderable.thenAccept { renderableObject -> addNodeToScene(fragment, anchor, renderableObject) }
+
+        modelRenderable.exceptionally {
+            val toast = Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT)
+            toast.show()
+            null
+        }
+    }
+
+    private fun addNodeToScene(fragment: ArFragment, anchor: Anchor, renderableObject: Renderable) {
+        val anchorNode = AnchorNode(anchor)
+        val transformableNode = TransformableNode(fragment.transformationSystem)
+        transformableNode.renderable = renderableObject
+        transformableNode.setParent(anchorNode)
+        fragment.arSceneView.scene.addChild(anchorNode)
+        transformableNode.select()
+    }
+
+    private fun setModelPath(modelFileName: String) {
+        selectedObject = Uri.parse(modelFileName)
+        val toast = Toast.makeText(applicationContext, modelFileName, Toast.LENGTH_SHORT)
+        toast.show()
+    }
+
+    /*private fun initTapListener() {
+        arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
+            val anchorNode = AnchorNode(
+                hitResult.createAnchor()
+            )
+            anchorNode.setParent(arFragment.arSceneView.scene)
+            val node = Node()
+            node.renderable = model
+            node.setParent(anchorNode)
+        }
+    }
+
+    private fun loadModel() {
+        lifecycleScope.launch {
+            model = ModelRenderable
+                .builder()
+                .setSource(this, R.raw.andy)
+        }
+    }*/
+
+    /*private fun placeModel(anchor: Anchor?) {
+        ModelRenderable
+            .builder()
+            .setSource(this,
+                RenderableSource
+                    .builder()
+                    .setSource(this, Uri.parse(ASSET_3D), RenderableSource.SourceType.GLTF2)
+                    .setScale(0.75f)
+                    .setRecentModel(RenderableSource.RecenterMode.ROOT)
+                    .build()
+            )
+            .setRegistryId(ASSET_3D)
+            .build()
+            .thenAccept(modelRenderable -> addNodeToScene(modelRenderable, anchor))
+            .exceptionally(throwable -> {})
+    }*/
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.nav_save_btn) {

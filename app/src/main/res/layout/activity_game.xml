@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".activities.game.GameActivity" >
 
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/navigation_header"
+        app:menu="@menu/settings_menu">
+
+    </com.google.android.material.navigation.NavigationView>
+
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,15 +32,5 @@
         android:layout_height="wrap_content"
         android:text="@string/enable_ar" />
     -->
-
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/settings_menu"
-        android:id="@+id/nav_menu"
-        android:layout_gravity="start" >
-
-    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
