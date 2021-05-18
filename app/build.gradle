@@ -75,6 +75,6 @@ dependencies {
 apply plugin: 'com.google.ar.sceneform.plugin'
 
 sceneform.asset('sampledata/model.obj',
-        'sampledata/materials.mtl',
+        'default',
         'sampledata/model.sfa',
         'src/main/assets/model')
