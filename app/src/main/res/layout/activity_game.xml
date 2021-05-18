@@ -7,14 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".activities.game.GameActivity" >
 
-    <Button
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment" />
+
+    <include
+        layout="@layout/content_game"/>
+
+    <!--<Button
         android:id="@+id/mArButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enable_ar" />
-
-    <include
-        layout="@layout/content_game"/>
+    -->
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
@@ -22,6 +29,8 @@
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/settings_menu"
         android:id="@+id/nav_menu"
-        android:layout_gravity="start" />
+        android:layout_gravity="start" >
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
