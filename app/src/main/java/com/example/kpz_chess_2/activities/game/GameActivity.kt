@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,17 +14,20 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.kpz_chess_2.MainActivity
 import com.example.kpz_chess_2.R
 import com.google.android.material.navigation.NavigationView
-import com.google.ar.core.ArCoreApk
+import com.google.ar.core.*
 import com.google.ar.core.ArCoreApk.Availability.*
-import com.google.ar.core.Session
 import com.google.ar.core.examples.java.common.helpers.CameraPermissionHelper
 import com.google.ar.core.exceptions.*
+import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.rendering.MaterialFactory
+import com.google.ar.sceneform.ux.ArFragment
 import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.content_game.*
+import java.util.*
 
 
 class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private var mSession: Session? = null
+    //private var mSession: Session? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -43,7 +47,24 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_menu.setNavigationItemSelectedListener(this)
 
-        maybeEnableArButton()
+        //maybeEnableArButton()
+        val arFragment: ArFragment = supportFragmentManager.findFragmentById(R.id.fragment) as ArFragment
+        arFragment.setOnTapArPlaneListener{ hitResult, plane, motionEvent ->
+            val anchor = hitResult.createAnchor()
+
+        }
+        /*arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
+            Anchor anchor = hitResult.createAnchor();
+
+            MaterialFactory.makeOpaqueWithColor(this, new Color(android.graphics.Color.RED))
+                    .thenAccept(material -> {
+            ModeRenderable renderable - ShapeFacotry.makeSphere(1.0f, new Vector3(0f, 1f, 1f), material);
+
+            AnchorNode. anchorNode = new AnchorNode(anchor);
+            anchorNode.setRenderable(renderable);
+            arFragment.gerArSceneView().getScene().addChild(anchorNode);
+        })
+        })*/
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -58,7 +79,11 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    fun maybeEnableArButton() {
+    /*private fun ArFragment.setOnTapArPlaneListener((hitResult: HitResult, plane: Plane, motionEvent: MotionEvent) {
+    anchor: Anchor = hitResult.
+});*/
+
+    /*fun maybeEnableArButton() {
         val availability = ArCoreApk.getInstance().checkAvailability(this)
         if (availability.isTransient) {
             // Continue to query availability at 5Hz while compatibility is checked in the background.
@@ -107,6 +132,25 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mSession = Session(this)
                         // Create a session config.
                         //val config = Config(mSession)
+
+                        val filter = CameraConfigFilter(mSession)
+
+                        // Return only camera configs that target 30 fps camera capture frame rate.
+                        filter.targetFps = EnumSet.of(CameraConfig.TargetFps.TARGET_FPS_30)
+
+                        // Return only camera configs that will not use the depth sensor.
+                        filter.depthSensorUsage = EnumSet.of(CameraConfig.DepthSensorUsage.DO_NOT_USE)
+
+                        // Get list of configs that match filter settings.
+                        // In this case, this list is guaranteed to contain at least one element,
+                        // because both TargetFps.TARGET_FPS_30 and DepthSensorUsage.DO_NOT_USE
+                        // are supported on all ARCore supported devices.
+                        val cameraConfigList = mSession!!.getSupportedCameraConfigs(filter)
+
+                        // Use element 0 from the list of returned camera configs. This is because
+                        // it contains the camera config that best matches the specified filter
+                        // settings.
+                        mSession!!.cameraConfig = cameraConfigList[0]
 
                         // Do feature-specific operations here, such as enabling depth or turning on
                         // support for Augmented Faces.
@@ -216,7 +260,10 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             SUPPORTED_NOT_INSTALLED -> TODO()
         }
-    }
+    }*/
 }
+
+
+
 
 
