@@ -84,15 +84,34 @@ class ChessWrapper(var updateCallback: ((board: Board)->Unit)? = null) {
                         checkCollision(piece, to)) return true
             }
             KING -> {
-                if(to.piece?.color != piece.color && (abs(piece.position!!.column - to.column) == 1 &&
-                                abs(piece.position!!.row - to.row) == 1) || (abs(piece.position!!.column - to.column) == 0 &&
-                                abs(piece.position!!.row - to.row) == 0) ) return true
+                if(to.piece?.color != piece.color && (abs(piece.position!!.column - to.column) <= 1 &&
+                                abs(piece.position!!.row - to.row) <= 1) ) return true
             }
         }
         return false
     }
 
     private fun checkCollision(piece: Piece, to: Field): Boolean {
+
+        val dy: Int = try {
+            - (piece.position!!.row - to.row) / abs(piece.position!!.row - to.row)
+        } catch(e: Exception){
+            0
+        }
+        val dx: Int = try {
+            - (piece.position!!.column - to.column) / abs(piece.position!!.column - to.column)
+        } catch(e: Exception){
+            0
+        }
+
+        var x = piece.position!!.column
+        var y = piece.position!!.row
+
+        while(x != to.column || y != to.row){
+            x += if (x != to.column) dx else 0
+            y += if (y != to.row) dy else 0
+            if(piece.position!!.board[x, y].piece != null && piece.position!!.board[x, y].piece!!.color == piece.color) return false
+        }
         return true
     }
 
