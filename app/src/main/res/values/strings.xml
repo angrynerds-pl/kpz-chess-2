@@ -45,4 +45,15 @@
     <string name="medium">MEDIUM</string>
     <string name="hard">HARD</string>
     <string name="header_text">ChessAR</string>
+    <string name="green_rectangle_1">green_rectangle_1</string>
+    <string name="vector_hemisphere_1">vector_hemisphere_1</string>
+    <string name="vector_ek15">vector_ek15</string>
+    <string name="light_green_rectangle_1">light_green_rectangle_1</string>
+    <string name="vector_hourglass_1">vector_hourglass_1</string>
+    <string name="vector_ek17">vector_ek17</string>
+    <string name="vector_hand_1">vector_hand_1</string>
+    <string name="vector_ek12">vector_ek12</string>
+    <string name="vector_ek13">vector_ek13</string>
+    <string name="vector_ek14">vector_ek14</string>
+    <string name="vector_ek16">vector_ek16</string>
 </resources>
