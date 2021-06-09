@@ -88,5 +88,54 @@ class ChessWrapperTest {
         assert(!chess.isLegal(chess.board['A', 4].piece!!, chess.board['B', 6]))
         assert(chess.isLegal(chess.board['B', 5].piece!!, chess.board['A', 4]))
         assert(!chess.isLegal(chess.board['B', 5].piece!!, chess.board['C', 4]))
+
+        //Rook
+        assert(chess.isLegal(chess.board['A', 1].piece!!, chess.board['A', 2]))
+        assert(chess.isLegal(chess.board['A', 1].piece!!, chess.board['A', 3]))
+        assert(!chess.isLegal(chess.board['A', 1].piece!!, chess.board['A', 4])) // own piece here
+        assert(!chess.isLegal(chess.board['A', 1].piece!!, chess.board['B', 1]))
+        assert(!chess.isLegal(chess.board['A', 1].piece!!, chess.board['B', 4]))
+        assert(!chess.isLegal(chess.board['A', 1].piece!!, chess.board['A', 5])) // collision
+        chess.move(chess.board['A', 1].piece!!, chess.board['A', 3])
+        assert(chess.isLegal(chess.board['A', 3].piece!!, chess.board['A', 1]))
+        assert(chess.isLegal(chess.board['A', 3].piece!!, chess.board['D', 3]))
+        assert(!chess.isLegal(chess.board['A', 3].piece!!, chess.board['D', 4]))
+
+        //Knight
+        assert(!chess.isLegal(chess.board['B', 1].piece!!, chess.board['A', 3])) // own piece here
+        assert(chess.isLegal(chess.board['B', 1].piece!!, chess.board['C', 3]))
+        assert(!chess.isLegal(chess.board['B', 1].piece!!, chess.board['D', 2]))
+        assert(!chess.isLegal(chess.board['B', 1].piece!!, chess.board['E', 2]))
+        assert(!chess.isLegal(chess.board['B', 1].piece!!, chess.board['F', 4]))
+        chess.move(chess.board['F', 7].piece!!, chess.board['F', 5])
+        chess.move(chess.board['B', 1].piece!!, chess.board['C', 3])
+        assert(chess.isLegal(chess.board['C', 3].piece!!, chess.board['D', 5]))
+        assert(chess.isLegal(chess.board['C', 3].piece!!, chess.board['B', 5]))
+        assert(chess.isLegal(chess.board['C', 3].piece!!, chess.board['B', 1]))
+        assert(!chess.isLegal(chess.board['C', 3].piece!!, chess.board['D', 1]))
+        assert(chess.isLegal(chess.board['C', 3].piece!!, chess.board['E', 4]))
+        assert(!chess.isLegal(chess.board['C', 3].piece!!, chess.board['A', 4])) // own piece here
+        assert(chess.isLegal(chess.board['C', 3].piece!!, chess.board['A', 2]))
+        assert(!chess.isLegal(chess.board['C', 3].piece!!, chess.board['E', 2])) // own piece here
+
+        //Bishop
+        assert(!chess.isLegal(chess.board['C', 1].piece!!, chess.board['A', 3]))
+        assert(!chess.isLegal(chess.board['C', 1].piece!!, chess.board['A', 2]))
+        assert(!chess.isLegal(chess.board['C', 1].piece!!, chess.board['D', 2]))
+        assert(!chess.isLegal(chess.board['C', 1].piece!!, chess.board['E', 2]))
+        assert(!chess.isLegal(chess.board['C', 1].piece!!, chess.board['F', 2]))
+        assert(!chess.isLegal(chess.board['C', 1].piece!!, chess.board['B', 5]))
+        chess.move(chess.board['F', 5].piece!!, chess.board['F', 4])
+        chess.move(chess.board['D', 2].piece!!, chess.board['D', 3])
+        assert(chess.isLegal(chess.board['C', 1].piece!!, chess.board['D', 2]))
+        assert(chess.isLegal(chess.board['C', 1].piece!!, chess.board['E', 3]))
+        assert(chess.isLegal(chess.board['C', 1].piece!!, chess.board['F', 4]))
+        chess.move(chess.board['G', 7].piece!!, chess.board['G', 6])
+        chess.move(chess.board['C', 1].piece!!, chess.board['E', 3])
+        assert(chess.isLegal(chess.board['E', 3].piece!!, chess.board['F', 4]))
+        assert(chess.isLegal(chess.board['E', 3].piece!!, chess.board['C', 1]))
+        assert(chess.isLegal(chess.board['E', 3].piece!!, chess.board['C', 5]))
+        assert(!chess.isLegal(chess.board['E', 3].piece!!, chess.board['F', 2]))
+        assert(!chess.isLegal(chess.board['E', 3].piece!!, chess.board['E', 4]))
     }
 }
