@@ -33,8 +33,6 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var arFragment: ArFragment
     private lateinit var model : Renderable
 
-    private lateinit var selectedObject: Uri
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -52,9 +50,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-
         nav_menu.setNavigationItemSelectedListener(this)
-
 
         supportFragmentManager.addFragmentOnAttachListener { fragmentManager, fragment ->
             if (fragment.getId() === R.id.fragment) {
@@ -104,7 +100,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun loadModel() {
         val weakActivity = WeakReference<GameActivity>(this)
         ModelRenderable.builder()
-            .setSource(this, Uri.parse("models/out.glb"))
+            .setSource(this, Uri.parse("models/pawn.glb"))
             .setIsFilamentGltf(true)
             .build()
             .thenAccept { model: ModelRenderable ->
