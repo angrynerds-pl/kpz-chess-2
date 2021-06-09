@@ -16,7 +16,9 @@ import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.ArSceneView
+import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.Sceneform
+import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.EngineInstance
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.Renderable
@@ -32,6 +34,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var arFragment: ArFragment
     private lateinit var model : Renderable
+    private lateinit var modelPawn : Renderable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +71,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        loadModel()
+        loadModels()
 
         /*
         arFragment = supportFragmentManager.findFragmentById(R.id.fragment) as ArFragment
@@ -97,10 +100,10 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    fun loadModel() {
+    fun loadModels() {
         val weakActivity = WeakReference<GameActivity>(this)
         ModelRenderable.builder()
-            .setSource(this, Uri.parse("models/pawn.glb"))
+            .setSource(this, Uri.parse("models/board.glb"))
             .setIsFilamentGltf(true)
             .build()
             .thenAccept { model: ModelRenderable ->
@@ -110,7 +113,21 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             .exceptionally { throwable: Throwable? ->
-                Toast.makeText(this, "Unable to load model", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
+                null
+            }
+        ModelRenderable.builder()
+            .setSource(this, Uri.parse("models/pawn.glb"))
+            .setIsFilamentGltf(true)
+            .build()
+            .thenAccept { model: ModelRenderable ->
+                val activity = weakActivity.get()
+                if (activity != null) {
+                    activity.modelPawn = model
+                }
+            }
+            .exceptionally { throwable: Throwable? ->
+                Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
                 null
             }
     }
@@ -131,6 +148,13 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         modelNode.setParent(anchorNode)
         modelNode.renderable = model
         modelNode.select()
+
+        val pawnNode = Node()
+        pawnNode.setParent(modelNode)
+        pawnNode.isEnabled = false
+        pawnNode.localPosition = Vector3(0.0f, 0.0f, 0.0f)
+        pawnNode.renderable = modelPawn
+        pawnNode.isEnabled = true
     }
 
     /*
