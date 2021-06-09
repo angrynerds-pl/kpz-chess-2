@@ -155,6 +155,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         pawnNode.localPosition = Vector3(0.0f, 0.0f, 0.0f)
         pawnNode.renderable = modelPawn
         pawnNode.isEnabled = true
+        pawnNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
     }
 
     /*
