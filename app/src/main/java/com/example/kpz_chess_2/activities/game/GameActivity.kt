@@ -35,6 +35,8 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var arFragment: ArFragment
     private lateinit var model : Renderable
     private lateinit var modelPawn : Renderable
+    private lateinit var modelRook : Renderable
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +132,21 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
                 null
             }
+
+        ModelRenderable.builder()
+            .setSource(this, Uri.parse("models/rook.glb"))
+            .setIsFilamentGltf(true)
+            .build()
+            .thenAccept { model: ModelRenderable ->
+                val activity = weakActivity.get()
+                if (activity != null) {
+                    activity.modelRook = model
+                }
+            }
+            .exceptionally { throwable: Throwable? ->
+                Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
+                null
+            }
     }
 
     override fun onTapPlane(hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent?) {
@@ -152,10 +169,18 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val pawnNode = Node()
         pawnNode.setParent(modelNode)
         pawnNode.isEnabled = false
-        pawnNode.localPosition = Vector3(0.0f, 0.0f, 0.0f)
+        pawnNode.localPosition = Vector3(0.0f, 0.1f, 0.0f)
+        pawnNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
         pawnNode.renderable = modelPawn
         pawnNode.isEnabled = true
-        pawnNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+
+        val rookNode = Node()
+        rookNode.setParent(modelNode)
+        rookNode.isEnabled = false
+        rookNode.localPosition = Vector3(0.2f, 0.1f, 0.0f)
+        rookNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        rookNode.renderable = modelRook
+        rookNode.isEnabled = true
     }
 
     /*
