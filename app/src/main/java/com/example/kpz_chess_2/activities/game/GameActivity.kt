@@ -3,6 +3,7 @@ package com.example.kpz_chess_2.activities.game
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.Toast
@@ -36,6 +37,10 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var model : Renderable
     private lateinit var modelPawn : Renderable
     private lateinit var modelRook : Renderable
+    private lateinit var modelBishop : Renderable
+    private lateinit var modelKing : Renderable
+    private lateinit var modelKnight : Renderable
+    private lateinit var modelQueen : Renderable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,8 +123,69 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
                 null
             }
+
         ModelRenderable.builder()
-            .setSource(this, Uri.parse("models/pawn.glb"))
+            .setSource(this, Uri.parse("models/bishopWhite.glb"))
+            .setIsFilamentGltf(true)
+            .build()
+            .thenAccept { model: ModelRenderable ->
+                val activity = weakActivity.get()
+                if (activity != null) {
+                    activity.modelBishop = model
+                }
+            }
+            .exceptionally { throwable: Throwable? ->
+                Toast.makeText(this, "Unable to load white bishop model", Toast.LENGTH_LONG).show()
+                null
+            }
+
+        ModelRenderable.builder()
+            .setSource(this, Uri.parse("models/kingWhite.glb"))
+            .setIsFilamentGltf(true)
+            .build()
+            .thenAccept { model: ModelRenderable ->
+                val activity = weakActivity.get()
+                if (activity != null) {
+                    activity.modelKing = model
+                }
+            }
+            .exceptionally { throwable: Throwable? ->
+                Toast.makeText(this, "Unable to load white king model", Toast.LENGTH_LONG).show()
+                null
+            }
+
+        ModelRenderable.builder()
+            .setSource(this, Uri.parse("models/knightWhite.glb"))
+            .setIsFilamentGltf(true)
+            .build()
+            .thenAccept { model: ModelRenderable ->
+                val activity = weakActivity.get()
+                if (activity != null) {
+                    activity.modelKnight = model
+                }
+            }
+            .exceptionally { throwable: Throwable? ->
+                Toast.makeText(this, "Unable to load white knight model", Toast.LENGTH_LONG).show()
+                null
+            }
+
+        ModelRenderable.builder()
+            .setSource(this, Uri.parse("models/queenWhite.glb"))
+            .setIsFilamentGltf(true)
+            .build()
+            .thenAccept { model: ModelRenderable ->
+                val activity = weakActivity.get()
+                if (activity != null) {
+                    activity.modelQueen = model
+                }
+            }
+            .exceptionally { throwable: Throwable? ->
+                Toast.makeText(this, "Unable to load white queen model", Toast.LENGTH_LONG).show()
+                null
+            }
+
+        ModelRenderable.builder()
+            .setSource(this, Uri.parse("models/pawnWhite.glb"))
             .setIsFilamentGltf(true)
             .build()
             .thenAccept { model: ModelRenderable ->
@@ -129,12 +195,12 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             .exceptionally { throwable: Throwable? ->
-                Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Unable to load white pawn model", Toast.LENGTH_LONG).show()
                 null
             }
 
         ModelRenderable.builder()
-            .setSource(this, Uri.parse("models/rook.glb"))
+            .setSource(this, Uri.parse("models/rookWhite.glb"))
             .setIsFilamentGltf(true)
             .build()
             .thenAccept { model: ModelRenderable ->
@@ -144,7 +210,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             .exceptionally { throwable: Throwable? ->
-                Toast.makeText(this, "Unable to load chessboard model", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Unable to load white rook model", Toast.LENGTH_LONG).show()
                 null
             }
     }
@@ -163,6 +229,7 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Create the transformable model and add it to the anchor.
         val modelNode = TransformableNode(arFragment.transformationSystem)
         modelNode.setParent(anchorNode)
+        Log.d("Siema", "${modelNode.localPosition}, ${modelNode.worldPosition}, ${modelNode.left}, ${modelNode.right}")
         modelNode.renderable = model
         modelNode.select()
 
@@ -171,16 +238,44 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         pawnNode.isEnabled = false
         pawnNode.localPosition = Vector3(0.0f, 0.1f, 0.0f)
         pawnNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        Log.d("Siema", "${pawnNode.localPosition}, ${pawnNode.worldPosition}, ${pawnNode.left}, ${pawnNode.right}")
         pawnNode.renderable = modelPawn
+        Log.d("Siema", "${pawnNode.localPosition}, ${pawnNode.worldPosition}, ${pawnNode.left}, ${pawnNode.right}")
         pawnNode.isEnabled = true
 
         val rookNode = Node()
         rookNode.setParent(modelNode)
         rookNode.isEnabled = false
-        rookNode.localPosition = Vector3(0.2f, 0.1f, 0.0f)
+        rookNode.localPosition = Vector3(0.0f, 0.1f, 0.0f)
         rookNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        //Log.d("Siema", "${rookNode.localPosition}, ${rookNode.worldPosition}, ${rookNode.left}, ${rookNode.right}")
         rookNode.renderable = modelRook
         rookNode.isEnabled = true
+
+        val kingNode = Node()
+        kingNode.setParent(modelNode)
+        kingNode.isEnabled = false
+        kingNode.localPosition = Vector3(0.2f, 0.1f, 1.0f)
+        kingNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        //Log.d("Siema", "${kingNode.localPosition}, ${kingNode.worldPosition}")
+        kingNode.renderable = modelKing
+        kingNode.isEnabled = true
+
+        val knightNode = Node()
+        knightNode.setParent(modelNode)
+        knightNode.isEnabled = false
+        knightNode.localPosition = Vector3(0.1f, 0.1f, 0.0f)
+        knightNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        knightNode.renderable = modelKnight
+        knightNode.isEnabled = true
+
+        val queenNode = Node()
+        queenNode.setParent(modelNode)
+        queenNode.isEnabled = false
+        queenNode.localPosition = Vector3(-0.1f, 0.1f, 0.0f)
+        queenNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        queenNode.renderable = modelQueen
+        queenNode.isEnabled = true
     }
 
     /*
