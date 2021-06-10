@@ -3,7 +3,6 @@ package com.example.kpz_chess_2.activities.game
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.Toast
@@ -228,54 +227,65 @@ class GameActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Create the transformable model and add it to the anchor.
         val modelNode = TransformableNode(arFragment.transformationSystem)
-        modelNode.setParent(anchorNode)
-        Log.d("Siema", "${modelNode.localPosition}, ${modelNode.worldPosition}, ${modelNode.left}, ${modelNode.right}")
         modelNode.renderable = model
+        modelNode.scaleController.minScale = 0.4f
+        modelNode.scaleController.maxScale = 2.0f
+        modelNode.localScale = Vector3(0.6f, 0.6f, 0.6f)
+        modelNode.setParent(anchorNode)
+        //Log.d("Siema", "${modelNode.localPosition}, ${modelNode.worldPosition}, ${modelNode.left}, ${modelNode.right}")
+
         modelNode.select()
 
         val pawnNode = Node()
         pawnNode.setParent(modelNode)
         pawnNode.isEnabled = false
-        pawnNode.localPosition = Vector3(0.0f, 0.1f, 0.0f)
-        pawnNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
-        Log.d("Siema", "${pawnNode.localPosition}, ${pawnNode.worldPosition}, ${pawnNode.left}, ${pawnNode.right}")
+        pawnNode.localPosition = Vector3(-0.57f, 0.1f, 0.59f)
+        pawnNode.localScale = Vector3(0.08f, 0.08f, 0.08f)
         pawnNode.renderable = modelPawn
-        Log.d("Siema", "${pawnNode.localPosition}, ${pawnNode.worldPosition}, ${pawnNode.left}, ${pawnNode.right}")
         pawnNode.isEnabled = true
 
         val rookNode = Node()
         rookNode.setParent(modelNode)
         rookNode.isEnabled = false
-        rookNode.localPosition = Vector3(0.0f, 0.1f, 0.0f)
-        rookNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
-        //Log.d("Siema", "${rookNode.localPosition}, ${rookNode.worldPosition}, ${rookNode.left}, ${rookNode.right}")
+        rookNode.localPosition = Vector3(-1.05f, 0.1f, 0.82f)
+        rookNode.localScale = Vector3(0.08f, 0.08f, 0.08f)
         rookNode.renderable = modelRook
         rookNode.isEnabled = true
-
-        val kingNode = Node()
-        kingNode.setParent(modelNode)
-        kingNode.isEnabled = false
-        kingNode.localPosition = Vector3(0.2f, 0.1f, 1.0f)
-        kingNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
-        //Log.d("Siema", "${kingNode.localPosition}, ${kingNode.worldPosition}")
-        kingNode.renderable = modelKing
-        kingNode.isEnabled = true
 
         val knightNode = Node()
         knightNode.setParent(modelNode)
         knightNode.isEnabled = false
-        knightNode.localPosition = Vector3(0.1f, 0.1f, 0.0f)
-        knightNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        knightNode.localPosition = Vector3(-1.09f, 0.1f, 0.82f)
+        knightNode.localScale = Vector3(0.08f, 0.08f, 0.08f)
+        //knightNode.localRotation = Quaternion(0f, 0f, 0f, 0f)
+        //Log.d("Siema", "${knightNode.localPosition}, ${knightNode.worldPosition}, ${knightNode.left}, ${knightNode.right}, ${knightNode.localRotation}")
         knightNode.renderable = modelKnight
         knightNode.isEnabled = true
+
+        val bishopNode = Node()
+        bishopNode.setParent(modelNode)
+        bishopNode.isEnabled = false
+        bishopNode.localPosition = Vector3(-1.11f, 0.1f, 0.82f)
+        bishopNode.localScale = Vector3(0.08f, 0.08f, 0.08f)
+        bishopNode.renderable = modelBishop
+        bishopNode.isEnabled = true
 
         val queenNode = Node()
         queenNode.setParent(modelNode)
         queenNode.isEnabled = false
-        queenNode.localPosition = Vector3(-0.1f, 0.1f, 0.0f)
-        queenNode.localScale = Vector3(0.2f, 0.2f, 0.2f)
+        queenNode.localPosition = Vector3(-1.1f, 0.1f, 0.82f)
+        queenNode.localScale = Vector3(0.075f, 0.075f, 0.075f)
         queenNode.renderable = modelQueen
         queenNode.isEnabled = true
+
+        val kingNode = Node()
+        kingNode.setParent(modelNode)
+        kingNode.isEnabled = false
+        kingNode.localPosition = Vector3(-1.05f, 0.1f, 0.82f)
+        kingNode.localScale = Vector3(0.07f, 0.07f, 0.07f)
+        kingNode.renderable = modelKing
+        kingNode.isEnabled = true
+
     }
 
     /*
